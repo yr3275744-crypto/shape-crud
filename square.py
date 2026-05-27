@@ -6,7 +6,7 @@ class Square(Shape):
     def __init__(self, shape_type, side):
         """docstring"""
         super().__init__(shape_type)
-        self.side = side
+        self.side = float(side)
         logger.info("the square created successfully")
     
     def get_area(self):

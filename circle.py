@@ -7,7 +7,7 @@ class Circle(Shape):
     def __init__(self, shape_type, radius):
         """docstring"""
         super().__init__(shape_type)
-        self.radius = radius
+        self.radius = float(radius)
         logger.info("the circle created successfully")
     
     def get_area(self):

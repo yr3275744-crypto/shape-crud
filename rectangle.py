@@ -6,8 +6,8 @@ class Rectangle(Shape):
     def __init__(self, shape_type, length_side, width_side):
         """docstring"""
         super().__init__(shape_type)
-        self.length_side = length_side
-        self.width_side = width_side
+        self.length_side = float(length_side)
+        self.width_side = float(width_side)
         logger.info("the rectangle created successfully")
     
     def get_area(self):
