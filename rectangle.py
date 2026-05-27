@@ -1,4 +1,5 @@
 from shape import Shape
+from logger_setup import manage_shapes_logger as logger
 
 class Rectangle(Shape):
     """docstring"""
@@ -7,6 +8,7 @@ class Rectangle(Shape):
         super().__init__(shape_id,"rectangle")
         self.length_side = length_side
         self.width_side = width_side
+        logger.info("the rectangle created successfully")
     
     def get_area(self):
         """docstring"""
@@ -23,7 +25,10 @@ class Rectangle(Shape):
         return the_shape
     
 if __name__ == "__main__":
-    a_squer = Rectangle(123, 5, 4)
-    print(a_squer.get_area)
-    print(a_squer.get_perimeter())
-    print(a_squer.to_dict())
+    try:
+        a_squer = Rectangle(123, 5, 4)
+        print(a_squer.get_area)
+        print(a_squer.get_perimeter())
+        print(a_squer.to_dict())
+    except Exception as e:
+        logger.exception(e)
