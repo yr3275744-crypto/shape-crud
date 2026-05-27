@@ -12,7 +12,7 @@ class Circle(Shape):
         """docstring"""
         return (self.radius ** 2) * pi
     
-    def get_permiter(self):
+    def get_perimeter(self):
         """docstring"""
         return 2 * self.radius * pi
     
@@ -23,4 +23,6 @@ class Circle(Shape):
     
 if __name__ == "__main__":
     a_circ = Circle(4321, 20)
-    print(a_circ.get_permiter())
+    print(a_circ.get_area())
+    print(a_circ.get_perimeter())
+    print(a_circ.to_dict())

@@ -15,7 +15,7 @@ class Rectangle(Shape):
 
     def get_perimeter(self):
         """docstring"""
-        return 2 * self.langth_side + 2 * self.width_side
+        return 2 * self.length_side + 2 * self.width_side
 
     def to_dict(self):
         """docstring"""
@@ -24,4 +24,6 @@ class Rectangle(Shape):
     
 if __name__ == "__main__":
     a_squer = Rectangle(123, 5, 4)
+    print(a_squer.get_area)
+    print(a_squer.get_perimeter())
     print(a_squer.to_dict())

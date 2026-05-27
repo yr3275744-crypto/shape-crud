@@ -22,4 +22,6 @@ class Square(Shape):
     
 if __name__ == "__main__":
     a_squer = Square(123, 5)
+    print(a_squer.get_area())
     print(a_squer.get_perimeter())
+    print(a_squer.to_dict())
