@@ -1,4 +1,5 @@
 import json
+from shape import Shape
 from square import Square
 from rectangle import Rectangle
 from circle import Circle
@@ -31,7 +32,7 @@ class ShapeManager:
         
         return shapes_list
     
-    def update_shape(self, shape_id:str, new_data:dict) -> bool:
+    def update_shape(self, shape_id:int, new_data:dict) -> bool:
         """docstring"""
         is_updated = False
         for shape in self.shapes:
@@ -40,11 +41,12 @@ class ShapeManager:
                 shape_dict.update(shape_id, **new_data)
                 self.shapes.remove(shape)
                 self.shapes.append(self.create_shape(shape_dict))
+                Shape.counter -= 1 
                 is_updated = True 
         
         return is_updated
     
-    def delete_shape(self, shape_id:str) -> bool:
+    def delete_shape(self, shape_id:int) -> bool:
         """docstring"""
         is_deleted = False
         
