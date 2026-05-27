@@ -3,9 +3,9 @@ from logger_setup import manage_shapes_logger as logger
 
 class Square(Shape):
     """docstring"""
-    def __init__(self,shape_id, side):
+    def __init__(self,shape_id, shape_type, side):
         """docstring"""
-        super().__init__(shape_id,"square")
+        super().__init__(shape_id,shape_type)
         self.side = side
         logger.info("the square created successfully")
     
@@ -24,7 +24,7 @@ class Square(Shape):
     
 if __name__ == "__main__":
     try:
-        a_squer = Square(123, 5)
+        a_squer = Square(123, "square", 5)
         print(a_squer.get_area())
         print(a_squer.get_perimeter())
         print(a_squer.to_dict())
