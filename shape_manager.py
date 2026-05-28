@@ -22,6 +22,10 @@ class ShapeManager:
         except KeyError as e:
             raise e("The shape type does not exists.")
         
+    def add_shape(self, shape:object) -> None:
+        """docstring"""
+        self.shapes.append(shape)
+        return None
 
     def get_all_shapes(self) -> list:
         """docstring"""
