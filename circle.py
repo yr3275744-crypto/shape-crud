@@ -1,4 +1,5 @@
 from shape import Shape
+from math import pi
 import logger_setup
 
 class Circle(Shape):
