@@ -1,14 +1,15 @@
 from shape import Shape
-from logger_setup import manage_shapes_logger as logger
+import logger_setup
 
 class Rectangle(Shape):
     """docstring"""
     def __init__(self, shape_type, length_side, width_side):
         """docstring"""
         super().__init__(shape_type)
+        self.logger = logger_setup.creat_manage_shape_logger()
         self.length_side = float(length_side)
         self.width_side = float(width_side)
-        logger.info("the rectangle created successfully")
+        self.logger.info("the rectangle created successfully")
     
     def get_area(self):
         """docstring"""
@@ -31,4 +32,5 @@ if __name__ == "__main__":
         print(a_squer.get_perimeter())
         print(a_squer.to_dict())
     except Exception as e:
+        logger = logger_setup.creat_manage_shape_logger()
         logger.exception(e)

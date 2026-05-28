@@ -1,14 +1,14 @@
 from shape import Shape
-from logger_setup import manage_shapes_logger as logger
-from math import pi
+import logger_setup
 
 class Circle(Shape):
     """docstring"""
     def __init__(self, shape_type, radius):
         """docstring"""
         super().__init__(shape_type)
+        self.logger = logger_setup.creat_manage_shape_logger()
         self.radius = float(radius)
-        logger.info("the circle created successfully")
+        self.logger.info("the circle created successfully")
     
     def get_area(self):
         """docstring"""
@@ -30,4 +30,5 @@ if __name__ == "__main__":
         print(a_circ.get_perimeter())
         print(a_circ.to_dict())
     except Exception as e:
+        logger = logger_setup.creat_manage_shape_logger()
         logger.exception(e)
