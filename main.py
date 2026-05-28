@@ -46,16 +46,14 @@ def create_rectangle_dict() -> dict:
     return {"type": "square", "length_side":length_side, "width_side":width_side}
     
 
-
-
 def add_shape_handle(shape_manager:ShapeManager, file_path:str, create_dict_functions:dict) -> None:
     """docstring"""
     try:
-        shape_name = input("Enter the sape you want add: ")
+        shape_name = input("Enter the shape you want add: ")
         shape_dict = create_dict_functions(shape_name)
     
     except KeyError:
-        raise("The shape does not exists.")
+        raise KeyError("The shape does not exists.")
     
     except ValueError:
         raise ValueError("The value is invalid.")
@@ -65,6 +63,22 @@ def add_shape_handle(shape_manager:ShapeManager, file_path:str, create_dict_func
     shape_manager.save_to_json(file_path)
     
     return None
+
+
+def update_shape_handle(shape_manager:ShapeManager, file_path:str, create_dict_functions:dict) -> None:
+    """docstring"""
+    try:
+        shape_id = int(input("Enter the shape id: "))
+        new_data = add_shape_handle(shape_manager, file_path, create_dict_functions)
+        shape_manager.update_shape(shape_id, new_data)
+    
+    except KeyError as e:
+        raise e
+    
+    except ValueError as e:
+        raise e("The value is invalid.")
+    
+
 
 def main(json_file_path:str) -> None:
     """docstring"""
@@ -79,21 +93,19 @@ def main(json_file_path:str) -> None:
         print_menu()
         
         try:
-            user_choice = get_user_choice()
-        
-        except ValueError as e:
+            user_choice = get_user_choice()        
+            
+            match user_choice:
+                case 1:
+                    add_shape_handle(shape_manager, json_file_path, create_dict_functions)
+                
+                case 2:
+                    update_shape_handle(shape_manager, json_file_path, create_dict_functions)
+                    
+        except (KeyError, ValueError) as e:
             print(e)
             continue
-        
-        match user_choice:
-            case 1:
-                try:
-                    add_shape_handle(shape_manager, json_file_path, create_dict_functions)
-                except (KeyError, ValueError) as e:
-                    print(e)
-                    continue
             
-                   
 
 
 

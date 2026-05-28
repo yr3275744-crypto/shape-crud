@@ -16,11 +16,7 @@ class ShapeManager:
     
     def create_shape(self, shape:dict) -> object | None:
         """docstring"""
-        try:
-            return SHAPE_CLASSES[shape["type"]](**shape)
-        
-        except KeyError as e:
-            raise e("The shape type does not exists.")
+        return SHAPE_CLASSES[shape["type"]](**shape)
         
     def add_shape(self, shape:object) -> None:
         """docstring"""
@@ -44,8 +40,8 @@ class ShapeManager:
                 shape_dict = shape.to_dict()
                 shape_dict.update(shape_id, **new_data)
                 self.shapes.remove(shape)
-                self.shapes.append(self.create_shape(shape_dict))
-                Shape.counter -= 1 
+                Shape.counter -= 1
+                self.shapes.append(self.create_shape(shape_dict)) 
                 is_updated = True 
         
         return is_updated
@@ -80,13 +76,17 @@ class ShapeManager:
         try:
             with open(json_file_path, "r") as f:
                 list_shapes_dicts = json.load(f)
-        
-        except json.decoder.JSONDecodeError as e:
-            self.logger.exception("the json file is empty.")
-            print("the json file is empty.")
-        
-        else:
+            
             for shape in list_shapes_dicts:
                 self.shapes.append(self.create_shape(shape))
+        
+        except json.decoder.JSONDecodeError as e:
+            self.logger.exception(e)
+            raise e("the json file is empty.")
+        
+        except KeyError as e:
+            self.logger.exception(e)
+            raise e("The shape does not exists.")
+
 
         return None
