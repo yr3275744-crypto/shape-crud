@@ -3,6 +3,7 @@ from shape import Shape
 from square import Square
 from rectangle import Rectangle
 from circle import Circle
+SHAPE_CLASSES = {"square":Square, "rectangle":Rectangle, "circle":Circle}
 
 class ShapeManager:
     """docstring"""
@@ -13,15 +14,12 @@ class ShapeManager:
     
     def create_shape(self, shape:dict) -> object | None:
         """docstring"""
-        match shape["type"]:
-            case "circle":
-                return Circle(**shape)
-            case "square":
-                return Square(**shape)
-            case "rectangle":
-                return Rectangle(**shape)
+        try:
+            return SHAPE_CLASSES[shape["type"]](**shape)
         
-        return None
+        except KeyError as e:
+            raise e("The shape type does not exists.")
+        
 
     def get_all_shapes(self) -> list:
         """docstring"""
