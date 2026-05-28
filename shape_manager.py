@@ -1,4 +1,5 @@
 import json
+import logger_setup
 from shape import Shape
 from square import Square
 from rectangle import Rectangle
@@ -7,10 +8,11 @@ SHAPE_CLASSES = {"square":Square, "rectangle":Rectangle, "circle":Circle}
 
 class ShapeManager:
     """docstring"""
-    def __init__(self) -> None:
+    def __init__(self, json_file_path:str) -> None:
         """docstring"""
+        self.logger = logger_setup.creat_manage_shape_logger()
         self.shapes = []
-        self.load_from_json()
+        self.load_from_json(json_file_path)
     
     def create_shape(self, shape:dict) -> object | None:
         """docstring"""
@@ -71,9 +73,15 @@ class ShapeManager:
 
     def load_from_json(self, json_file_path:str) -> None:
         """docstring"""
-        with open(json_file_path, "r") as f:
-            list_shapes_dicts = json.load(f)
-            
+        try:
+            with open(json_file_path, "r") as f:
+                list_shapes_dicts = json.load(f)
+        
+        except json.decoder.JSONDecodeError as e:
+            self.logger.exception("the json file is empty.")
+            print("the json file is empty.")
+        
+        else:
             for shape in list_shapes_dicts:
                 self.shapes.append(self.create_shape(shape))
 
