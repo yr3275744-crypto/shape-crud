@@ -4,7 +4,7 @@ from shape_manager import ShapeManager
 
 def print_menu() -> None:
     """docstring"""
-    print("""Welcome to the shape-manager!
+    print("""== Welcome to the shape-manager! ==
           Choose an option:
           1.Add shape
           2.Update shape
@@ -24,10 +24,7 @@ def get_user_choice() -> int:
             raise ValueError("You must enter a number between 1 and 5.")
     
     except ValueError as e:
-        raise e("You must enter a number between 1 and 5.")
-
-    
-
+        raise ValueError("You must enter a number between 1 and 5.")
 
 
 def main(json_file_path:str) -> None:
@@ -44,15 +41,23 @@ def main(json_file_path:str) -> None:
             
             match user_choice:
                 case 1:
-                    add_shape_handle(shape_manager, json_file_path, create_dict_functions)
+                    shape_manager.add_shape_handle()
                 
                 case 2:
-                    update_shape_handle(shape_manager, json_file_path, create_dict_functions)
+                    shape_manager.update_shape_handle()
+                
+                case 3:
+                    shape_manager.remove_shape_handle()
+                
+                case 4:
+                    shape_manager.show_all_shapes()
+                
                     
         except (KeyError, ValueError) as e:
             print(e)
             continue
-            
+        
+    return None
 
 
 

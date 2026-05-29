@@ -4,7 +4,6 @@ from shape import Shape
 from square import Square
 from rectangle import Rectangle
 from circle import Circle
-SHAPE_CLASSES = {"square":Square, "rectangle":Rectangle, "circle":Circle}
 
 class ShapeManager:
     """docstring"""
@@ -12,8 +11,10 @@ class ShapeManager:
         """docstring"""
         self.logger = logger_setup.creat_manage_shape_logger()
         self.shapes = []
-        self.load_from_json(json_file_path)
-        self.creat_dict_functions = {"circle":self.create_circle_dict, 
+        self.json_file = json_file_path
+        self.load_from_json()
+        self.shape_classes = {"square":Square, "rectangle":Rectangle, "circle":Circle}
+        self.create_dict_functions = {"circle":self.create_circle_dict, 
                                    "square":self.create_square_dict, 
                                    "rectangle":self.create_rectangle_dict}
     
@@ -35,9 +36,10 @@ class ShapeManager:
         width_side =  float(input("Enter the width side value: "))
         return {"type": "square", "length_side":length_side, "width_side":width_side}
 
-    def create_shape(self, shape:dict) -> object | None:
+    def create_shape(self, shape_dict:dict) -> object | None:
         """docstring"""
-        return SHAPE_CLASSES[shape["type"]](**shape)
+        shape_type = shape_dict["type"]
+        return self.shape_classes[shape_type](**shape_dict)
         
     def add_shape(self, shape:object) -> None:
         """docstring"""
@@ -53,6 +55,18 @@ class ShapeManager:
         
         return shapes_list
     
+    def show_all_shapes(self):
+        """docstring"""
+        shapes_list = self.get_all_shapes()
+        
+        if not shapes_list:
+            print("There are no shapes to display yet.")
+        
+        for shape_dict in shapes_list:
+            print(shape_dict)
+        
+        return None
+
     def update_shape(self, shape_id:int, new_data:dict) -> bool:
         """docstring"""
         is_updated = False
@@ -78,13 +92,13 @@ class ShapeManager:
         
         return is_deleted
 
-    def add_shape_handle(self, file_path:str) -> None:
+    def add_shape_handle(self) -> None:
         """docstring"""
         try:
             shape_name = input("Enter the shape you want add: ")
-            shape_dict = self.create_dict_functions(shape_name)
+            shape_dict = self.create_dict_functions[shape_name]()
         
-        except KeyError:
+        except KeyError as e:
             raise KeyError("The shape does not exists.")
         
         except ValueError:
@@ -92,46 +106,47 @@ class ShapeManager:
 
         shape_object = self.create_shape(shape_dict)
         self.add_shape(shape_object)
-        self.save_to_json(file_path)
+        self.save_to_json(self.json_file)
         
         return None
 
 
-    def update_shape_handle(self, file_path:str, create_dict_functions:dict) -> bool:
+    def update_shape_handle(self) -> bool:
         """docstring"""
         try:
             shape_id = int(input("Enter the shape id: "))
-            new_data = self.add_shape_handle(self, file_path, create_dict_functions)
+            new_data = self.add_shape_handle(self)
             is_updated = self.update_shape(shape_id, new_data)
             return is_updated
         
         except ValueError as e:
             raise e("The value is invalid.")
         
-    def remove_shape_handle(shape_manager:ShapeManager, file_path:str, create_dict_functions:dict) -> None:
+    def remove_shape_handle(self) -> bool:
         """docstring"""
         try:
             shape_id = int(input("Enter the shape id: "))
-            return ShapeManager.delete_shape(shape_id)
+            return self.delete_shape(shape_id)
+        
         except ValueError as e:
             raise e("The value is invalid.")
 
-    def save_to_json(self, json_file_path:str):
+    def save_to_json(self):
         """docstring"""
         is_saved = False
         shapes_list = self.get_all_shapes()
         
-        with open(json_file_path, "w") as f:
+        with open(self.json_file, "w") as f:
             json.dump(shapes_list, f)
         
         is_saved = True
 
         return is_saved
  
-    def load_from_json(self, json_file_path:str) -> None:
+    def load_from_json(self) -> None:
         """docstring"""
         try:
-            with open(json_file_path, "r") as f:
+            with open(self.json_file, "r") as f:
                 list_shapes_dicts = json.load(f)
             
             for shape in list_shapes_dicts:
@@ -139,7 +154,7 @@ class ShapeManager:
         
         except json.decoder.JSONDecodeError as e:
             self.logger.exception(e)
-            raise e("the json file is empty.")
+            print("the json file is empty.")
         
         except KeyError as e:
             self.logger.exception(e)
