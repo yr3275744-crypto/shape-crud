@@ -39,7 +39,15 @@ class ShapeManager:
     def create_shape(self, shape_dict:dict) -> object | None:
         """docstring"""
         shape_type = shape_dict["type"]
-        return self.shape_classes[shape_type](**shape_dict)
+        mapping = {"type":"shape_type"}
+        translated_dict = {}
+        for k, v in shape_dict.items():
+            if k in mapping:
+                translated_dict[mapping[k]] = v
+            else:
+                translated_dict[k] = v
+        
+        return self.shape_classes[shape_type](**translated_dict)
         
     def add_shape(self, shape:object) -> None:
         """docstring"""
@@ -106,7 +114,7 @@ class ShapeManager:
 
         shape_object = self.create_shape(shape_dict)
         self.add_shape(shape_object)
-        self.save_to_json(self.json_file)
+        self.save_to_json()
         
         return None
 
