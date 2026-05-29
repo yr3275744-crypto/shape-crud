@@ -7,9 +7,9 @@ def print_menu() -> None:
     print("""Welcome to the shape-manager!
           Choose an option:
           1.Add shape
-          2.Show all shapes
-          3.Update shape
-          4.Delete shape
+          2.Update shape
+          3.Remove shape
+          4.Show all shapes
           5.Exit""")
     return None
 
@@ -26,65 +26,12 @@ def get_user_choice() -> int:
     except ValueError as e:
         raise e("You must enter a number between 1 and 5.")
 
-
-def create_circle_dict() -> dict:
-    """docstring"""
-    radius = float(input("Enter the radius: "))
-    return {"type": "circle", "radius":radius}
-
-
-def create_square_dict() -> dict:
-    """docstring"""
-    side = float(input("Enter the side value: "))
-    return {"type": "square", "side":side}
     
 
-def create_rectangle_dict() -> dict:
-    """docstring"""
-    length_side = float(input("Enter the length side value: "))
-    width_side =  float(input("Enter the width side value: "))
-    return {"type": "square", "length_side":length_side, "width_side":width_side}
-    
-
-def add_shape_handle(shape_manager:ShapeManager, file_path:str, create_dict_functions:dict) -> None:
-    """docstring"""
-    try:
-        shape_name = input("Enter the shape you want add: ")
-        shape_dict = create_dict_functions(shape_name)
-    
-    except KeyError:
-        raise KeyError("The shape does not exists.")
-    
-    except ValueError:
-        raise ValueError("The value is invalid.")
-
-    shape_object = shape_manager.create_shape(shape_dict)
-    shape_manager.add_shape(shape_object)
-    shape_manager.save_to_json(file_path)
-    
-    return None
-
-
-def update_shape_handle(shape_manager:ShapeManager, file_path:str, create_dict_functions:dict) -> None:
-    """docstring"""
-    try:
-        shape_id = int(input("Enter the shape id: "))
-        new_data = add_shape_handle(shape_manager, file_path, create_dict_functions)
-        shape_manager.update_shape(shape_id, new_data)
-    
-    except KeyError as e:
-        raise e
-    
-    except ValueError as e:
-        raise e("The value is invalid.")
-    
 
 
 def main(json_file_path:str) -> None:
     """docstring"""
-    create_dict_functions = {"circle":create_circle_dict, 
-                                   "square":create_square_dict, 
-                                   "rectangle":create_rectangle_dict}
     
     shape_manager = ShapeManager(json_file_path)
     user_choice = None
