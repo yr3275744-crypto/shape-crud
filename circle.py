@@ -7,7 +7,7 @@ class Circle(Shape):
     def __init__(self, shape_type, radius):
         """docstring"""
         super().__init__(shape_type)
-        self.logger = logger_setup.creat_manage_shape_logger()
+        self.logger = logger_setup.create_manage_shape_logger()
         self.radius = float(radius)
         self.logger.info("the circle created successfully")
     

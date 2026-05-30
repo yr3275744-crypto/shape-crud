@@ -6,7 +6,7 @@ class Rectangle(Shape):
     def __init__(self, shape_type, length_side, width_side):
         """docstring"""
         super().__init__(shape_type)
-        self.logger = logger_setup.creat_manage_shape_logger()
+        self.logger = logger_setup.create_manage_shape_logger()
         self.length_side = float(length_side)
         self.width_side = float(width_side)
         self.logger.info("the rectangle created successfully")

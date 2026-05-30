@@ -6,7 +6,7 @@ class Square(Shape):
     def __init__(self, shape_type, side):
         """docstring"""
         super().__init__(shape_type)
-        self.logger = logger_setup.creat_manage_shape_logger()
+        self.logger = logger_setup.create_manage_shape_logger()
         self.side = float(side)
         self.logger.info("the square created successfully")
     

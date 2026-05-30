@@ -30,7 +30,7 @@ def get_user_choice() -> int:
 
 def main(json_file_path:str) -> None:
     """docstring"""
-    logger = logger_setup.creat_manage_shape_logger()
+    logger = logger_setup.create_manage_shape_logger()
     shape_manager = ShapeManager(json_file_path)
     user_choice = None
 

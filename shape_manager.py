@@ -9,7 +9,7 @@ class ShapeManager:
     """docstring"""
     def __init__(self, json_file_path:str) -> None:
         """docstring"""
-        self.logger = logger_setup.creat_manage_shape_logger()
+        self.logger = logger_setup.create_manage_shape_logger()
         self.shapes = []
         self.json_file = json_file_path
         self.shape_classes = {"square":Square, "rectangle":Rectangle, "circle":Circle}
@@ -38,7 +38,7 @@ class ShapeManager:
 
     def create_shape(self, shape_dict:dict) -> object | None:
         """docstring"""
-        mapping = {"type":"shape_type"}
+        mapping = {"type":"shape_type", "length side":"length_side", "width side":"width_side"}
         translated_dict = {}
         for k, v in shape_dict.items():
             if k in mapping:
@@ -75,17 +75,21 @@ class ShapeManager:
         
         return None
 
-    def update_shape(self, shape_id:int, new_data:dict) -> bool:
+    def update_shape(self, shape_id:int) -> bool:
         """docstring"""
         is_updated = False
         for shape in self.shapes:
             if shape.id == shape_id:
                 shape_dict = shape.to_dict()
-                shape_dict.update(shape_id, **new_data)
+                shape_type = shape_dict["type"]
+                new_data = self.create_dict_functions[shape_type]()
+                shape_dict.update(**new_data)
                 self.shapes.remove(shape)
-                Shape.counter -= 1
-                self.add_shape(self.create_shape(shape_dict)) 
+                # Shape.counter -= 1
+                shape = self.create_shape(shape_dict)
+                self.add_shape(shape) 
                 is_updated = True 
+                break
         
         return is_updated
     
@@ -97,6 +101,7 @@ class ShapeManager:
             if shape.id == shape_id:
                 self.shapes.remove(shape)
                 is_deleted = True
+                break
         
         return is_deleted
 
@@ -118,6 +123,7 @@ class ShapeManager:
         self.add_shape(shape_object)
         self.save_to_json()
         self.logger.info("the shape was added succeffully.")
+        print("the shape was added succeffully.")
         
         return None
 
@@ -126,23 +132,29 @@ class ShapeManager:
         """docstring"""
         try:
             shape_id = int(input("Enter the shape id: "))
-            new_data = self.add_shape_handle(self)
-            is_updated = self.update_shape(shape_id, new_data)
-            return is_updated
+            is_updated = self.update_shape(shape_id)
+            if is_updated:
+                self.save_to_json()
+                self.logger.info("The shape updated successfully.")
+                print("The shape updated successfully.")
+
         
         except ValueError as e:
             self.logger.exception(e)
-            raise e("The value is invalid.")
+            raise ValueError("The value is invalid.")
         
     def remove_shape_handle(self) -> bool:
         """docstring"""
         try:
             shape_id = int(input("Enter the shape id: "))
-            return self.delete_shape(shape_id)
+            is_deleted =  self.delete_shape(shape_id)
+            self.save_to_json()
+            if is_deleted:
+                self.logger.info(f"The shape {shape_id} is deleted succesffully.")
         
         except ValueError as e:
             self.logger.exception(e)
-            raise e("The value is invalid.")
+            raise ValueError("The value is invalid.")
 
     def save_to_json(self):
         """docstring"""
@@ -165,8 +177,13 @@ class ShapeManager:
             for shape in list_shapes_dicts:
                 self.add_shape(self.create_shape(shape))
         
+        except FileNotFoundError as e:
+            self.logger.exception(e)
+            raise ValueError("The file does not exists.")
+        
         except json.decoder.JSONDecodeError as e:
             self.logger.exception(e)
+            raise ValueError("The file is empty.")
         
         except KeyError as e:
             self.logger.exception(e)
