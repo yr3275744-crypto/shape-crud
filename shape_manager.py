@@ -12,11 +12,11 @@ class ShapeManager:
         self.logger = logger_setup.creat_manage_shape_logger()
         self.shapes = []
         self.json_file = json_file_path
-        self.load_from_json()
         self.shape_classes = {"square":Square, "rectangle":Rectangle, "circle":Circle}
         self.create_dict_functions = {"circle":self.create_circle_dict, 
                                    "square":self.create_square_dict, 
                                    "rectangle":self.create_rectangle_dict}
+        self.load_from_json()
     
     def create_circle_dict(self) -> dict:
         """docstring"""
@@ -34,11 +34,10 @@ class ShapeManager:
         """docstring"""
         length_side = float(input("Enter the length side value: "))
         width_side =  float(input("Enter the width side value: "))
-        return {"type": "square", "length_side":length_side, "width_side":width_side}
+        return {"type": "rectangle", "length_side":length_side, "width_side":width_side}
 
     def create_shape(self, shape_dict:dict) -> object | None:
         """docstring"""
-        shape_type = shape_dict["type"]
         mapping = {"type":"shape_type"}
         translated_dict = {}
         for k, v in shape_dict.items():
@@ -46,8 +45,9 @@ class ShapeManager:
                 translated_dict[mapping[k]] = v
             else:
                 translated_dict[k] = v
-        
-        return self.shape_classes[shape_type](**translated_dict)
+        if translated_dict.get("id"):
+            translated_dict.pop("id")
+        return self.shape_classes[translated_dict["shape_type"]](**translated_dict)
         
     def add_shape(self, shape:object) -> None:
         """docstring"""
@@ -107,14 +107,17 @@ class ShapeManager:
             shape_dict = self.create_dict_functions[shape_name]()
         
         except KeyError as e:
+            self.logger.exception(e)
             raise KeyError("The shape does not exists.")
         
-        except ValueError:
+        except ValueError as e:
+            self.logger.exception(e)
             raise ValueError("The value is invalid.")
 
         shape_object = self.create_shape(shape_dict)
         self.add_shape(shape_object)
         self.save_to_json()
+        self.logger.info("the shape was added succeffully.")
         
         return None
 
@@ -128,6 +131,7 @@ class ShapeManager:
             return is_updated
         
         except ValueError as e:
+            self.logger.exception(e)
             raise e("The value is invalid.")
         
     def remove_shape_handle(self) -> bool:
@@ -137,6 +141,7 @@ class ShapeManager:
             return self.delete_shape(shape_id)
         
         except ValueError as e:
+            self.logger.exception(e)
             raise e("The value is invalid.")
 
     def save_to_json(self):
@@ -162,10 +167,9 @@ class ShapeManager:
         
         except json.decoder.JSONDecodeError as e:
             self.logger.exception(e)
-            print("the json file is empty.")
         
         except KeyError as e:
             self.logger.exception(e)
-            raise e("The shape does not exists.")
+            raise KeyError("The shape does not exists.")
     
         return None

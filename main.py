@@ -1,6 +1,7 @@
 #TODO:add logs to all files. add checks to load_from_json methods in shape_manager
 
 from shape_manager import ShapeManager
+import logger_setup
 
 def print_menu() -> None:
     """docstring"""
@@ -29,7 +30,7 @@ def get_user_choice() -> int:
 
 def main(json_file_path:str) -> None:
     """docstring"""
-    
+    logger = logger_setup.creat_manage_shape_logger()
     shape_manager = ShapeManager(json_file_path)
     user_choice = None
 
@@ -45,7 +46,6 @@ def main(json_file_path:str) -> None:
                 
                 case 2:
                     shape_manager.update_shape_handle()
-                
                 case 3:
                     shape_manager.remove_shape_handle()
                 
