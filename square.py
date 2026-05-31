@@ -2,24 +2,25 @@ from shape import Shape
 import logger_setup
 
 class Square(Shape):
-    """docstring"""
-    def __init__(self, shape_type, side):
-        """docstring"""
-        super().__init__(shape_type)
+    """A class to represent a square shape."""
+    
+    def __init__(self, shape_type, side, id = None):
+        """Initialize the square with a shape type and side length."""
+        super().__init__(shape_type, id)
         self.logger = logger_setup.create_manage_shape_logger()
         self.side = float(side)
         self.logger.info("the square created successfully")
     
     def get_area(self):
-        """docstring"""
+        """Calculate and return the area of the square."""
         return self.side ** 2
 
     def get_perimeter(self):
-        """docstring"""
+        """Calculate and return the perimeter of the square."""
         return self.side * 4
 
     def to_dict(self):
-        """docstring"""
+        """Return the square properties as a dictionary."""
         the_shape = {"id":self.id, "type":self.shape_type, "side":self.side}
         return the_shape
     

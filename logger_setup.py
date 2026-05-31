@@ -8,6 +8,6 @@ def create_manage_shape_logger():
 
 
 if __name__ == "__main__":
-    manage_shapes_logger = creat_manage_shape_logger()
+    manage_shapes_logger = create_manage_shape_logger()
     print(manage_shapes_logger)
     manage_shapes_logger.info("The logger is working.")
