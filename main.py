@@ -1,4 +1,6 @@
-#TODO:add logs to all files. add checks to load_from_json methods in shape_manager
+#TODO:add logs to all files.
+# remove the for id == lops and replace them in the find by id function.
+# add checks to load_from_json methods in shape_manager
 # https://github.com/yr3275744-crypto/shape-crud
 
 from shape_manager import ShapeManager

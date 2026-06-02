@@ -76,20 +76,18 @@ class ShapeManager:
             print(shape_dict)
         return None
 
-    def update_shape(self, shape_id: int) -> bool:
-        """Find and update a shape's data by its ID."""
-        is_updated = False
+    def find_shape_by_id(self, id:int) -> object | None:
         for shape in self.shapes:
-            if shape.id == shape_id:
-                shape_dict = shape.to_dict()
-                shape_type = shape_dict["type"]
-                new_data = self.create_dict_functions[shape_type]()
-                shape_dict.update(**new_data)
-                self.shapes.remove(shape)
-                shape = self.create_shape(shape_dict)
-                self.add_shape(shape) 
-                is_updated = True 
-                break
+            if shape.id == id:
+                return shape
+
+    def update_shape(self, shape_dict:dict, new_data:dict) -> bool:
+        """Update a shape's data."""
+        is_updated = False
+        shape = self.create_shape(new_data)
+        self.add_shape(shape) 
+        is_updated = True 
+
         return is_updated
     
     def delete_shape(self, shape_id: int) -> bool:
@@ -125,8 +123,16 @@ class ShapeManager:
         """Handle user input to find and update a shape by ID."""
         try:
             shape_id = int(input("Enter the shape id: "))
-            is_updated = self.update_shape(shape_id)
+            shape = self.find_shape_by_id(shape_id)
+            if not shape:
+                self.logger.error("The shape does not exists")
+                raise ValueError("The shape does not exists")
+            shape_dict = shape.to_dict()
+            shape_type = shape_dict["type"]
+            new_data = self.create_dict_functions[shape_type]()
+            is_updated = self.update_shape(shape_dict, new_data)
             if is_updated:
+                self.shapes.remove(shape)
                 self.save_to_json()
                 self.logger.info("The shape updated successfully.")
                 print("The shape updated successfully.")
