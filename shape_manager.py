@@ -179,3 +179,12 @@ class ShapeManager:
             self.logger.exception(e)
             raise KeyError("The shape does not exists.")
         return None
+    
+    def get_total_area(self):
+        """Get the total area of all the shapes"""
+        total_area = 0
+        
+        for shape in self.shapes:
+            total_area += shape.get_area()
+        
+        return total_area

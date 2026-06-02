@@ -12,6 +12,11 @@ def manege_app():
     @app.get("/shapes", status_code = 200)
     def get_shapes():
         return shape_manager.get_all_shapes()
+        
+    @app.get("/shapes/total-area")
+    def get_total_area():
+        total_area =  shape_manager.get_total_area()
+        return total_area
 
     @app.get("/shapes/{id}")
     def get_Shape_by_id(id:int, response:Response):
@@ -46,6 +51,13 @@ def manege_app():
                 return response.status_code
         except (KeyError, ValueError, TypeError) as e:
             response.status_code = status.HTTP_400_BAD_REQUEST
+            return response.status_code
+    
+    @app.delete("/shapes/{id}", status_code = 200)
+    def delete_a_shape(id:int, response:Response):
+        is_deleted = shape_manager.delete_shape(id)
+        if not is_deleted:
+            response.status_code = status.HTTP_404_NOT_FOUND
             return response.status_code
     
     uvicorn.run(app)
