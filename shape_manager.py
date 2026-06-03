@@ -41,11 +41,24 @@ class ShapeManager:
             raise ValueError("You must enter a positive number.")
         return {"type": "rectangle", "length_side": length_side, "width_side": width_side}
 
+    def get_all_shapes(self) -> list:
+        """Return a list of all shapes converted to dictionaries."""
+        shapes_list = []
+        for shape in self.shapes:
+            shapes_list.append(shape.to_dict())
+        return shapes_list
+    
     def create_shape(self, shape_dict: dict) -> object | None:
         """Instantiate and return a specific Shape object from a dictionary."""
         mapping = {"type": "shape_type", "length side": "length_side", "width side": "width_side"}
         translated_dict = {}
-        id = None
+        shape_dicts = self.get_all_shapes()
+        all_id = [shape_dict["id"] for shape_dict in shape_dicts]
+        if all_id:
+            max_id = max(all_id)
+            id = max_id + 1
+        else:
+            id = 1
         for k, v in shape_dict.items():
             if k in mapping:
                 translated_dict[mapping[k]] = v
@@ -60,13 +73,6 @@ class ShapeManager:
         self.shapes.append(shape)
         return None
 
-    def get_all_shapes(self) -> list:
-        """Return a list of all shapes converted to dictionaries."""
-        shapes_list = []
-        for shape in self.shapes:
-            shapes_list.append(shape.to_dict())
-        return shapes_list
-    
     def show_all_shapes(self):
         """Print all shapes."""
         shapes_list = self.get_all_shapes()
@@ -188,3 +194,8 @@ class ShapeManager:
             total_area += shape.get_area()
         
         return total_area
+    
+
+if __name__ == "__main__":
+    shape_manager = ShapeManager("shapes.json")
+    print(shape_manager.get_all_shapes())
