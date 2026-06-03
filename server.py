@@ -2,32 +2,31 @@
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
 from shape_manager import ShapeManager
 import logger_setup
 
 def manege_app():
-    """docstring"""
+    """dmanag an fastapi app to manege shape"""
     app = FastAPI()
     shape_manager = ShapeManager("shapes.json")
     logger = logger_setup.create_manage_shape_logger()
 
     @app.get("/shapes", status_code = 200)
     def get_shapes():
-        """docstring"""
+        """send all shapes list"""
         logger.info("send all shapes now")
         return shape_manager.get_all_shapes()
         
     @app.get("/shapes/total-area")
     def get_total_area():
-        """docstring"""
+        """send the total area of all the shapes."""
         total_area =  shape_manager.get_total_area()
         logger.info("send total area now")
         return total_area
 
     @app.get("/shapes/{id}")
     def get_Shape_by_id(id:int):
-        """docstring"""
+        """send a specific shape by its id"""
         shape = shape_manager.find_shape_by_id(id)
         if shape:
             logger.info("send shape now")
@@ -39,7 +38,7 @@ def manege_app():
 
     @app.post("/shapes", status_code = 201)
     def add_a_shape(shape_dict:dict):
-        """docstring"""
+        """add a shape."""
         try:
             shape_object = shape_manager.create_shape(shape_dict)
             shape_manager.add_shape(shape_object)
@@ -58,7 +57,7 @@ def manege_app():
 
     @app.put("/shapes/{id}", status_code = 200)
     def update_a_shape(id:int, new_data:dict):
-        """docstring"""
+        """update a shape."""
         try:
             shape = shape_manager.find_shape_by_id(id)
             shape_dict = shape.to_dict()
@@ -83,7 +82,7 @@ def manege_app():
     
     @app.delete("/shapes/{id}", status_code = 200)
     def delete_a_shape(id:int):
-        """docstring"""
+        """delet a shape."""
         is_deleted = shape_manager.delete_shape(id)
         if not is_deleted:
             logger.error("The removeing shape failed. The shape does not exists")
